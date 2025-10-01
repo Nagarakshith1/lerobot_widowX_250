@@ -70,6 +70,7 @@ from lerobot.robots import (  # noqa: F401
     make_robot_from_config,
     so100_follower,
     so101_follower,
+    widowX_250S
 )
 from lerobot.teleoperators import (  # noqa: F401
     Teleoperator,
@@ -81,6 +82,7 @@ from lerobot.teleoperators import (  # noqa: F401
     make_teleoperator_from_config,
     so100_leader,
     so101_leader,
+    keyboard
 )
 from lerobot.utils.robot_utils import busy_wait
 from lerobot.utils.utils import init_logging, move_cursor_up
@@ -111,7 +113,7 @@ def teleop_loop(
             observation = robot.get_observation()
             log_rerun_data(observation, action)
 
-        robot.send_action(action)
+        robot.send_action_deltas(action)
         dt_s = time.perf_counter() - loop_start
         busy_wait(1 / fps - dt_s)
 
@@ -140,7 +142,7 @@ def teleoperate(cfg: TeleoperateConfig):
     robot = make_robot_from_config(cfg.robot)
 
     teleop.connect()
-    robot.connect()
+    robot.connect(calibrate=False)
 
     try:
         teleop_loop(teleop, robot, cfg.fps, display_data=cfg.display_data, duration=cfg.teleop_time_s)

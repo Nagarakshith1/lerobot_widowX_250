@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<robot name="wx250">
+
+  <!-- Base -->
+  <link name="base_link"/>
+
+  <!-- Waist -->
+  <joint name="waist" type="revolute">
+    <parent link="base_link"/>
+    <child link="shoulder_link"/>
+    <origin xyz="0 0 0.072" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.1415826535897931" upper="3.1415826535897931" velocity="3.1415826535897931" effort="10"/>
+  </joint>
+  <link name="shoulder_link"/>
+
+  <!-- Shoulder -->
+  <joint name="shoulder" type="revolute">
+    <parent link="shoulder_link"/>
+    <child link="upper_arm_link"/>
+    <origin xyz="0 0 0.03865" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.88496" upper="1.98968" velocity="3.1415926535897931" effort="20"/>
+  </joint>
+  <link name="upper_arm_link"/>
+
+   <!-- Elbow -->
+  <joint name="elbow" type="revolute">
+    <parent link="upper_arm_link"/>
+    <child link="upper_forearm_link"/>
+    <origin xyz="0.04975 0 0.25" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.14675" upper="1.6057" velocity="3.1415926535897931" effort="15"/>
+  </joint>
+  <link name="upper_forearm_link"/>
+
+  <!-- Forearm roll -->
+  <joint name="forearm_roll" type="revolute">
+    <parent link="upper_forearm_link"/>
+    <child link="lower_forearm_link"/>
+    <origin xyz="0.175 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-3.1415826535897931" upper="3.1415826535897931" velocity="3.1415926535897931" effort="2"/>
+  </joint>
+  <link name="lower_forearm_link"/>
+
+  <!-- Wrist pitch -->
+  <joint name="wrist_angle" type="revolute">
+    <parent link="lower_forearm_link"/>
+    <child link="wrist_link"/>
+    <origin xyz="0.075 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.74533" upper="2.14675" velocity="3.1415926535897931" effort="5"/>
+  </joint>
+  <link name="wrist_link"/>
+
+  <!-- Wrist roll -->
+  <joint name="wrist_rotate" type="revolute">
+    <parent link="wrist_link"/>
+    <child link="gripper_link"/>
+    <origin xyz="0.065 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-3.1415826535897931" upper="3.1415826535897931" velocity="3.1415926535897931" effort="1"/>
+  </joint>
+  <link name="gripper_link"/>
+
+  <!-- EE frame -->
+  <joint name="ee_arm" type="fixed">
+    <parent link="gripper_link"/>
+    <child link="ee_arm_link"/>
+    <origin xyz="0.0485 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+  <link name="ee_arm_link"/>
+
+</robot>
