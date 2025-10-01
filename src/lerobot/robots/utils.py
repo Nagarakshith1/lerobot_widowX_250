@@ -61,6 +61,10 @@ def make_robot_from_config(config: RobotConfig) -> Robot:
         from .bi_so100_follower import BiSO100Follower
 
         return BiSO100Follower(config)
+    elif config.type == "reachy2":
+        from .reachy2 import Reachy2Robot
+
+        return Reachy2Robot(config)
     elif config.type == "widowx_250s":
         from .widowX_250S import WidowX250S
 
@@ -74,7 +78,7 @@ def make_robot_from_config(config: RobotConfig) -> Robot:
 
 
 def ensure_safe_goal_position(
-    goal_present_pos: dict[str, tuple[float, float]], max_relative_target: float | dict[float]
+    goal_present_pos: dict[str, tuple[float, float]], max_relative_target: float | dict[str, float]
 ) -> dict[str, float]:
     """Caps relative action target magnitude for safety."""
 
