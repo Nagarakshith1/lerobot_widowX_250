@@ -30,10 +30,21 @@ class WidowX250SConfig(RobotConfig):
     # cameras
     cameras: dict[str, CameraConfig] = field(default_factory=dict)
 
-    urdf_path: str | None = None
+    closed_gripper_pos: float = 40
+    open_gripper_pos: float = 70
 
+    velocity_tps: int = 50  # ticks per second
+    acceleration_tps2: int = 100  # ticks per second squared
+
+
+@RobotConfig.register_subclass("widowx_250s_end_effector")
+@dataclass
+class WidowX250SEndEffectorConfig(WidowX250SConfig):
+    """Configuration for the WidowX250SEndEffector robot."""
     # End-effector frame name in the URDF
     target_frame_name: str = "ee_arm_link"
+
+    urdf_path: str | None = None
 
     # Default bounds for the end-effector position (in meters)
     end_effector_bounds: dict[str, list[float]] = field(
@@ -42,12 +53,6 @@ class WidowX250SConfig(RobotConfig):
             "max": [0.5, 0.3, 0.5],  # max x, y, z
         }
     )
-
-    closed_gripper_pos: float = 40
-    open_gripper_pos: float = 70
-
-    velocity_tps: int = 50  # ticks per second
-    acceleration_tps2: int = 100  # ticks per second squared
 
     # Defined in meters
     end_effector_step_sizes: dict[str, float] = field(

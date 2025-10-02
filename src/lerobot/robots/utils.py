@@ -69,6 +69,10 @@ def make_robot_from_config(config: RobotConfig) -> Robot:
         from .widowX_250S import WidowX250S
 
         return WidowX250S(config)
+    elif config.type == "widowx_250s_end_effector":
+        from .widowX_250S import WidowX250SEndEffector
+
+        return WidowX250SEndEffector(config)
     elif config.type == "mock_robot":
         from tests.mocks.mock_robot import MockRobot
 
