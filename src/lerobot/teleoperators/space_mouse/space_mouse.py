@@ -182,19 +182,10 @@ class SpaceMouse(Teleoperator):
             ty = self._apply_expo(self._apply_deadzone(evt.y))
             tz = self._apply_expo(self._apply_deadzone(evt.z))
 
-            norm = (tx ** 2 + ty ** 2 + tz ** 2) ** 0.5
-            if norm < 0.05:
-                tx, ty, tz = 0.0, 0.0, 0.0
-
             # Gains and per-axis scalers
             dx = tx * self.config.gain_xyz
             dy = ty * self.config.gain_xyz
             dz = tz * self.config.gain_xyz
-
-            def clamp(v: float, eps: float = 0.01) -> float:
-                return 0.0 if abs(v) < eps else v
-
-            dx, dy, dz = clamp(dx), clamp(dy), clamp(dz)
 
         droll, dpitch = 0.0, 0.0
         if not self._orientation_lock:
