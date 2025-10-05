@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from dataclasses import dataclass, field
+import os
 
 from lerobot.cameras import CameraConfig
 from ..config import RobotConfig
@@ -43,7 +44,7 @@ class WidowX250SEndEffectorConfig(WidowX250SConfig):
     # End-effector frame name in the URDF
     target_frame_name: str = "ee_arm_link"
 
-    urdf_path: str | None = None
+    urdf_path: str | None = os.path.join(os.path.dirname(__file__), "widowX_250S.urdf")
 
     # Default bounds for the end-effector position (in meters)
     end_effector_bounds: dict[str, list[float]] = field(
