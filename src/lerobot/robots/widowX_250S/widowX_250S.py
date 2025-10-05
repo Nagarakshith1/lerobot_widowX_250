@@ -11,10 +11,9 @@ from lerobot.motors.dynamixel import (
     DynamixelMotorsBus,
     OperatingMode,
 )
-
+from .widowX_250S_config import WidowX250SConfig
 from ..robot import Robot
 from ..utils import ensure_safe_goal_position
-from .widowX_250S_config import WidowX250SConfig
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +22,6 @@ class WidowX250S(Robot):
     """
     WidowX250 adapter
     """
-
     config_class = WidowX250SConfig
     name = "widowx_250s"
 
@@ -182,10 +180,7 @@ class WidowX250S(Robot):
 
         # Read arm positions (ticks)
         start = time.perf_counter()
-        obs_state = self.bus.sync_read("Present_Position")
-        # Pop shadow joints
-        obs_state.pop("shoulder_shadow", None)
-        obs_state.pop("elbow_shadow", None)
+        obs_state = self.bus.sync_read("Present_Position", motors=self.motor_names_for_observations)
 
         obs_dict[OBS_STATE] = obs_state
         obs_dict.update({f"{motor}.pos": val for motor, val in obs_state.items()})
@@ -234,7 +229,7 @@ class WidowX250S(Robot):
             goal_pos["elbow_shadow"] = goal_pos["elbow"]
 
         # Send goal positions
-        self.bus.sync_write("Goal_Position", goal_pos)
+        self.bus.sync_write("Goal_Position", goal_pos, num_retry=0)
         # Pop shadow joints
         goal_pos.pop("shoulder_shadow", None)
         goal_pos.pop("elbow_shadow", None)
@@ -259,7 +254,6 @@ class WidowX250S(Robot):
             "wrist_rotate": 2030,
             "gripper": self.calibration["gripper"].range_min
         }
-
         self.bus.sync_write("Goal_Position", disconnect_pos_ticks, normalize=False)
         time.sleep(3)  # Wait for the arm to reach the position
 

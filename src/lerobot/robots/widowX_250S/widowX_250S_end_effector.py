@@ -1,13 +1,27 @@
 import logging
 
 import numpy as np
-from lerobot.errors import DeviceNotConnectedError
 
+from lerobot.errors import DeviceNotConnectedError
 from . import WidowX250S
 from .widowX_250S_config import WidowX250SEndEffectorConfig
 from ...model.kinematics import RobotKinematics
 
 logger = logging.getLogger(__name__)
+
+
+def ypr_to_rotation_matrix(self, yaw: float, pitch: float, roll: float) -> np.ndarray:
+    """
+    Convention: intrinsic ZYX (yaw-pitch-roll).
+    """
+    cx, cy, cz = np.cos([roll, pitch, yaw])
+    sx, sy, sz = np.sin([roll, pitch, yaw])
+
+    return np.array([
+        [cz * cy, cz * sy * sx - sz * cx, cz * sy * cx + sz * sx],
+        [sz * cy, sz * sy * sx + cz * cx, sz * sy * cx - cz * sx],
+        [-sy, cy * sx, cy * cx]
+    ])
 
 
 class WidowX250SEndEffector(WidowX250S):
@@ -70,6 +84,7 @@ class WidowX250SEndEffector(WidowX250S):
         if not self.is_connected:
             raise DeviceNotConnectedError(f"{self} is not connected.")
 
+        rot_delta = np.eye(3)
         # Convert action to numpy array if not already
         if isinstance(action, dict):
             if all(k in action for k in ["delta_x", "delta_y", "delta_z"]):
@@ -78,11 +93,22 @@ class WidowX250SEndEffector(WidowX250S):
                         action["delta_x"] * self.config.end_effector_step_sizes["x"],
                         action["delta_y"] * self.config.end_effector_step_sizes["y"],
                         action["delta_z"] * self.config.end_effector_step_sizes["z"],
-                        ],
+                    ],
                     dtype=np.float32,
                 )
                 if "gripper" not in action:
                     action["gripper"] = [1.0]
+                if "delta_pitch" in action or "delta_roll" in action or "delta_yaw" in action:
+                    droll = action.get("delta_roll", 0.0)
+                    dpitch = action.get("delta_pitch", 0.0)
+                    dyaw = action.get("delta_yaw", 0.0)
+                    rot_delta = ypr_to_rotation_matrix(self, dyaw, dpitch, droll)
+                if "goto_home" in action and action["goto_home"] > 0.5:
+                    # Reset current positions to home
+                    self.current_ee_pos_metrics = None
+                    self.current_joint_pos_metrics = None
+                    self.send_to_home()
+                    logger.info("Going to home position")
                 action = np.append(delta_ee, action["gripper"])
             else:
                 logger.warning(
@@ -111,6 +137,8 @@ class WidowX250SEndEffector(WidowX250S):
             self.end_effector_bounds["min"],
             self.end_effector_bounds["max"],
         )
+        # Apply rotation delta in the end-effector frame
+        desired_ee_pos_metrics[:3, :3] = desired_ee_pos_metrics[:3, :3] @ rot_delta
 
         # Compute inverse kinematics to get joint positions
         target_joint_pos_metrics = self.kinematics.inverse_kinematics(
@@ -124,8 +152,7 @@ class WidowX250SEndEffector(WidowX250S):
         elif action[-1] > 1:
             target_joint_pos_metrics[-1] = self.config.open_gripper_pos
         else:
-            target_joint_pos_metrics[-1]  = self.current_joint_pos_metrics[-1]
-
+            target_joint_pos_metrics[-1] = self.current_joint_pos_metrics[-1]
 
         self.current_ee_pos_metrics = desired_ee_pos_metrics.copy()
         self.current_joint_pos_metrics = target_joint_pos_metrics.copy()

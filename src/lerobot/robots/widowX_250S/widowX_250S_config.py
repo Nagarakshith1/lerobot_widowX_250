@@ -15,7 +15,6 @@
 from dataclasses import dataclass, field
 
 from lerobot.cameras import CameraConfig
-
 from ..config import RobotConfig
 
 
@@ -24,7 +23,7 @@ from ..config import RobotConfig
 class WidowX250SConfig(RobotConfig):
     port: str  # Port to connect to the arm
 
-    disable_torque_on_disconnect: bool = False
+    disable_torque_on_disconnect: bool = True
     max_relative_target: int | None = None
 
     # cameras
