@@ -143,7 +143,7 @@ def teleoperate(cfg: TeleoperateConfig):
     robot = make_robot_from_config(cfg.robot)
 
     teleop.connect()
-    robot.connect(calibrate=False)
+    robot.connect()
 
     try:
         teleop_loop(teleop, robot, cfg.fps, display_data=cfg.display_data, duration=cfg.teleop_time_s)

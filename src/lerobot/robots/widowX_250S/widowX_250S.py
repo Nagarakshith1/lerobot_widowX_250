@@ -74,7 +74,7 @@ class WidowX250S(Robot):
     def is_connected(self) -> bool:
         return self.bus.is_connected and all(cam.is_connected for cam in self.cameras.values())
 
-    def connect(self, calibrate: bool = True) -> None:
+    def connect(self, calibrate: bool = False) -> None:
         """
         We assume that at connection time, arm is in a rest position,
         and torque can be safely disabled to run calibration.
