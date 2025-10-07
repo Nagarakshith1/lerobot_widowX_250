@@ -244,14 +244,14 @@ class WidowX250S(Robot):
 
         # Move to calibration file
         disconnect_pos_ticks = {
-            "waist": 2017,
-            "shoulder": 843,
-            "shoulder_shadow": 858,
-            "elbow": 3124,
-            "elbow_shadow": 3065,
-            "forearm_roll": 2016,
-            "wrist_angle": 2623,
-            "wrist_rotate": 2030,
+            "waist": 2006,
+            "shoulder": 847,
+            "shoulder_shadow": 861,
+            "elbow": 3024,
+            "elbow_shadow": 3232,
+            "forearm_roll": 2040,
+            "wrist_angle": 2531,
+            "wrist_rotate": 2064,
             "gripper": self.calibration["gripper"].range_min
         }
         self.bus.sync_write("Goal_Position", disconnect_pos_ticks, normalize=False)
@@ -269,10 +269,10 @@ class WidowX250S(Robot):
 
         home_pos_ticks = {
             "waist": 2048 + self.calibration["waist"].homing_offset,
-            "shoulder": 2048 + self.calibration["shoulder"].homing_offset,
-            "shoulder_shadow": 2048 + self.calibration["shoulder_shadow"].homing_offset,
-            "elbow": 2048 + self.calibration["elbow"].homing_offset,
-            "elbow_shadow": 2048 + self.calibration["elbow_shadow"].homing_offset,
+            "shoulder": 1163,
+            "shoulder_shadow": 1175,
+            "elbow": 2790,
+            "elbow_shadow": 3001,
             "forearm_roll": 2048 + self.calibration["forearm_roll"].homing_offset,
             "wrist_angle": 2048 + self.calibration["wrist_angle"].homing_offset,
             "wrist_rotate": 2048 + self.calibration["wrist_rotate"].homing_offset,
