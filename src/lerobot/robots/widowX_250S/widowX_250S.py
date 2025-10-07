@@ -11,10 +11,9 @@ from lerobot.motors.dynamixel import (
     DynamixelMotorsBus,
     OperatingMode,
 )
-
+from .widowX_250S_config import WidowX250SConfig
 from ..robot import Robot
 from ..utils import ensure_safe_goal_position
-from .widowX_250S_config import WidowX250SConfig
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +22,6 @@ class WidowX250S(Robot):
     """
     WidowX250 adapter
     """
-
     config_class = WidowX250SConfig
     name = "widowx_250s"
 
@@ -76,7 +74,7 @@ class WidowX250S(Robot):
     def is_connected(self) -> bool:
         return self.bus.is_connected and all(cam.is_connected for cam in self.cameras.values())
 
-    def connect(self, calibrate: bool = True) -> None:
+    def connect(self, calibrate: bool = False) -> None:
         """
         We assume that at connection time, arm is in a rest position,
         and torque can be safely disabled to run calibration.
@@ -182,10 +180,7 @@ class WidowX250S(Robot):
 
         # Read arm positions (ticks)
         start = time.perf_counter()
-        obs_state = self.bus.sync_read("Present_Position")
-        # Pop shadow joints
-        obs_state.pop("shoulder_shadow", None)
-        obs_state.pop("elbow_shadow", None)
+        obs_state = self.bus.sync_read("Present_Position", motors=self.motor_names_for_observations)
 
         obs_dict[OBS_STATE] = obs_state
         obs_dict.update({f"{motor}.pos": val for motor, val in obs_state.items()})
@@ -234,7 +229,7 @@ class WidowX250S(Robot):
             goal_pos["elbow_shadow"] = goal_pos["elbow"]
 
         # Send goal positions
-        self.bus.sync_write("Goal_Position", goal_pos)
+        self.bus.sync_write("Goal_Position", goal_pos, num_retry=0)
         # Pop shadow joints
         goal_pos.pop("shoulder_shadow", None)
         goal_pos.pop("elbow_shadow", None)
@@ -249,17 +244,16 @@ class WidowX250S(Robot):
 
         # Move to calibration file
         disconnect_pos_ticks = {
-            "waist": 2017,
-            "shoulder": 843,
-            "shoulder_shadow": 858,
-            "elbow": 3124,
-            "elbow_shadow": 3065,
-            "forearm_roll": 2016,
-            "wrist_angle": 2623,
-            "wrist_rotate": 2030,
+            "waist": 2006,
+            "shoulder": 847,
+            "shoulder_shadow": 861,
+            "elbow": 3024,
+            "elbow_shadow": 3232,
+            "forearm_roll": 2040,
+            "wrist_angle": 2531,
+            "wrist_rotate": 2064,
             "gripper": self.calibration["gripper"].range_min
         }
-
         self.bus.sync_write("Goal_Position", disconnect_pos_ticks, normalize=False)
         time.sleep(3)  # Wait for the arm to reach the position
 
@@ -275,10 +269,10 @@ class WidowX250S(Robot):
 
         home_pos_ticks = {
             "waist": 2048 + self.calibration["waist"].homing_offset,
-            "shoulder": 2048 + self.calibration["shoulder"].homing_offset,
-            "shoulder_shadow": 2048 + self.calibration["shoulder_shadow"].homing_offset,
-            "elbow": 2048 + self.calibration["elbow"].homing_offset,
-            "elbow_shadow": 2048 + self.calibration["elbow_shadow"].homing_offset,
+            "shoulder": 1163,
+            "shoulder_shadow": 1175,
+            "elbow": 2790,
+            "elbow_shadow": 3001,
             "forearm_roll": 2048 + self.calibration["forearm_roll"].homing_offset,
             "wrist_angle": 2048 + self.calibration["wrist_angle"].homing_offset,
             "wrist_rotate": 2048 + self.calibration["wrist_rotate"].homing_offset,
