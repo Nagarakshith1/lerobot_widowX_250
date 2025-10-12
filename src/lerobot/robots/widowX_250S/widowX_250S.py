@@ -216,11 +216,13 @@ class WidowX250S(Robot):
         # Extract motor->goal mapping from "<motor>.pos" keys
         goal_pos = {key.removesuffix(".pos"): val for key, val in action.items() if key.endswith(".pos")}
 
-        # Clip goals if too far from present positions (smoother teleop/BC playback)
+        # Clip goals if too far from present positions (smoother teleop/BC playback) except for gripper
         if self.config.max_relative_target is not None:
             present_pos = self.bus.sync_read("Present_Position")
             goal_present_pos = {key: (g_pos, present_pos[key]) for key, g_pos in goal_pos.items()}
+            goal_present_pos.pop("gripper", None)
             goal_pos = ensure_safe_goal_position(goal_present_pos, self.config.max_relative_target)
+            goal_pos["gripper"] = action.get("gripper.pos", present_pos.get("gripper"))
 
         # Add shadow joints
         if "shoulder" in goal_pos:

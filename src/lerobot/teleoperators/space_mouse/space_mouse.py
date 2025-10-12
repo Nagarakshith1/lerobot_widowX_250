@@ -187,13 +187,15 @@ class SpaceMouse(Teleoperator):
             dy = ty * self.config.gain_xyz
             dz = tz * self.config.gain_xyz
 
-        droll, dpitch = 0.0, 0.0
+        droll, dpitch, dyaw = 0.0, 0.0, 0.0
         if not self._orientation_lock:
             rp = self._apply_expo(self._apply_deadzone(evt.pitch))
             rr = self._apply_expo(self._apply_deadzone(evt.roll))
+            ry = self._apply_expo(self._apply_deadzone(evt.yaw))
             # Flip pitch/roll to match end-effector frame (x-forward, y-left, z-up)
-            droll = rp * self.config.gain_roll
+            droll = - rp * self.config.gain_roll
             dpitch = rr * self.config.gain_pitch
+            dyaw = - ry * self.config.gain_yaw
 
         return {
             "delta_x": dx,
@@ -201,6 +203,7 @@ class SpaceMouse(Teleoperator):
             "delta_z": dz,
             "delta_pitch": dpitch,
             "delta_roll": droll,
+            "delta_yaw": dyaw,
             "gripper": self.gripper_state,
             "goto_home": 1.0 if evt.left_button and evt.right_button else 0.0
         }

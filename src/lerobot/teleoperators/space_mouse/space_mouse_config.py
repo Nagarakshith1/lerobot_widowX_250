@@ -15,16 +15,17 @@
 # limitations under the License.
 
 from dataclasses import dataclass
+
 from ..config import TeleoperatorConfig
 
 
 @TeleoperatorConfig.register_subclass("space_mouse")
 @dataclass
 class SpaceMouseConfig(TeleoperatorConfig):
-    # Linear gain [m/step] and yaw gain [rad/step]
-    gain_xyz: float = 0.3
+    # Linear and angular gain
     gain_pitch: float = 0.05
-    gain_roll: float = 0.2
+    gain_roll: float = 0.05
+    gain_yaw: float = 0.05
     # Deadzone on raw normalized axes (0..1)
     deadzone: float = 0.03
     # Exponential response (value^expo * sign)

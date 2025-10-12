@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from dataclasses import dataclass, field
 import os
+from dataclasses import dataclass, field
 
 from lerobot.cameras import CameraConfig
 from ..config import RobotConfig
@@ -25,7 +25,7 @@ class WidowX250SConfig(RobotConfig):
     port: str  # Port to connect to the arm
 
     disable_torque_on_disconnect: bool = True
-    max_relative_target: int | None = None
+    max_relative_target: float | None = 10.
 
     # cameras
     cameras: dict[str, CameraConfig] = field(default_factory=dict)
