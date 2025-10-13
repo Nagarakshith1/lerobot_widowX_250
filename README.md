@@ -15,13 +15,15 @@ This fork extends [LeRobot](https://github.com/huggingface/lerobot) to support t
 ### Pick and Place: Block into Cup using ACT
 
 #### Attempt 1: Single-Camera Setup
-![teleop_single_camera.png](media/widowx_250s/pick_and_place/teleop_single_camera.png)
+<img src="media/widowx_250s/pick_and_place/teleop_single_camera.png" height="250" alt="teleop_single_camera">
+
 Trained the [ACT](https://arxiv.org/abs/2304.13705) policy to perform a pick-and-place task — moving a block into a cup — using a **single front-mounted camera**.  
 
 A total of **50 demonstration episodes** were collected using the **SpaceMouse teleoperation system**, with the block placed in various starting configurations.  
 You can explore the dataset on Hugging Face: [widowx_250_pick_and_place_block](https://huggingface.co/datasets/msnaga/widowx_250_pick_and_place_block).  
 ##### 🎥 Episode Demo
-![teleop.gif](media/widowx_250s/pick_and_place/teleop.gif)
+
+<img src="media/widowx_250s/pick_and_place/teleop.gif" height="250" alt="teleop">
 
 The model was trained for **60,000 steps** using the default ACT hyperparameters.  
 The corresponding trained checkpoint is available here: [widowx_250_pick_and_place_block_policy](https://huggingface.co/msnaga/widowx_250_pick_and_place_block_policy).
@@ -34,8 +36,10 @@ The corresponding trained checkpoint is available here: [widowx_250_pick_and_pla
 5. With minimal assistance (e.g., positioning the block more visibly in front), the arm was able to **grip and place** the block into the cup successfully.
 
 ##### ▶️ Policy Evaluation Sample
-![single_camera_eval_1.gif](media/widowx_250s/pick_and_place/single_camera_eval_1.gif)
 
+<img src="media/widowx_250s/pick_and_place/single_camera_eval_1.gif" height="250" alt="single_camera_eval_1">
+
+---
 
 ## Teleoperation System
 
