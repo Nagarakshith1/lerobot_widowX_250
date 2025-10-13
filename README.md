@@ -6,12 +6,41 @@ This fork extends [LeRobot](https://github.com/huggingface/lerobot) to support t
 
 🔗 Robot specifications can be found here: [WidowX 250S Documentation](https://docs.trossenrobotics.com/interbotix_xsarms_docs/specifications/wx250s.html)
 
+📌 For detailed teleoperation setup and usage instructions, see the **Teleoperation System** section below.
+
 ---
+
+## Experiments
+
+### Pick and Place: Block into Cup using ACT
+
+#### Attempt 1: Single-Camera Setup
+![teleop_single_camera.png](media/widowx_250s/pick_and_place/teleop_single_camera.png)
+Trained the [ACT](https://arxiv.org/abs/2304.13705) policy to perform a pick-and-place task — moving a block into a cup — using a **single front-mounted camera**.  
+
+A total of **50 demonstration episodes** were collected using the **SpaceMouse teleoperation system**, with the block placed in various starting configurations.  
+You can explore the dataset on Hugging Face: [widowx_250_pick_and_place_block](https://huggingface.co/datasets/msnaga/widowx_250_pick_and_place_block).  
+##### 🎥 Episode Demo
+![teleop.gif](media/widowx_250s/pick_and_place/teleop.gif)
+
+The model was trained for **60,000 steps** using the default ACT hyperparameters.  
+The corresponding trained checkpoint is available here: [widowx_250_pick_and_place_block_policy](https://huggingface.co/msnaga/widowx_250_pick_and_place_block_policy).
+
+##### Observations
+1. The model successfully learned the overall task but struggled with **precise positioning** of the gripper when reaching for the block or cup.  
+2. The **single-camera setup** likely limited performance due to the **lack of depth information**.  
+3. When the gripper approached the block from behind, it often **collided with the table**, as the 2D camera perspective made the alignment appear correct. Similarly, approaching from the front caused the gripper to **close too high** above the block.  
+4. If the block was moved after the gripper had already reached it, the arm failed to adapt — this represents **out-of-distribution data** for the trained model.  
+5. With minimal assistance (e.g., positioning the block more visibly in front), the arm was able to **grip and place** the block into the cup successfully.
+
+##### ▶️ Policy Evaluation Sample
+![single_camera_eval_1.gif](media/widowx_250s/pick_and_place/single_camera_eval_1.gif)
+
 
 ## Teleoperation System
 
-You can teleoperate the WidowX 250S robotic arm using either:  
-- **Keyboard controls**, or  
+You can teleoperate the WidowX 250S robotic arm using:  
+- **Keyboard controls**,
 - **[3Dconnexion SpaceMouse](https://3dconnexion.com/dk/product/spacemouse-compact/)**  
 
 The robot is controlled via **end-effector position control**.  
