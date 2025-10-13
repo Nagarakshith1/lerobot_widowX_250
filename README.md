@@ -12,7 +12,7 @@ This fork extends [LeRobot](https://github.com/huggingface/lerobot) to support t
 
 ## Experiments
 
-### Pick and Place: Block into Cup using ACT
+### Pick and place the block into the cup using Action Chunking Transformer
 
 #### Attempt 1: Single-Camera Setup
 <img src="media/widowx_250s/pick_and_place/teleop_single_camera.png" height="250" alt="teleop_single_camera">
@@ -33,7 +33,7 @@ The corresponding trained checkpoint is available here: [widowx_250_pick_and_pla
 2. The **single-camera setup** likely limited performance due to the **lack of depth information**.  
 3. When the gripper approached the block from behind, it often **collided with the table**, as the 2D camera perspective made the alignment appear correct. Similarly, approaching from the front caused the gripper to **close too high** above the block.  
 4. If the block was moved after the gripper had already reached it, the arm failed to adapt — this represents **out-of-distribution data** for the trained model.  
-5. With minimal assistance (e.g., positioning the block more visibly in front), the arm was able to **grip and place** the block into the cup successfully.
+5. With some assistance (e.g., positioning the block more visibly in front), the arm was able to **grip and place** the block into the cup successfully.
 
 ##### ▶️ Policy Evaluation Sample
 
