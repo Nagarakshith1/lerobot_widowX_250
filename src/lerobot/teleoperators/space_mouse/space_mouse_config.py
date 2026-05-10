@@ -23,6 +23,7 @@ from ..config import TeleoperatorConfig
 @dataclass
 class SpaceMouseConfig(TeleoperatorConfig):
     # Linear and angular gain
+    gain_xyz: float = 0.3
     gain_pitch: float = 0.05
     gain_roll: float = 0.05
     gain_yaw: float = 0.05
