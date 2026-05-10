@@ -216,6 +216,15 @@ class WidowX250S(Robot):
         # Extract motor->goal mapping from "<motor>.pos" keys
         goal_pos = {key.removesuffix(".pos"): val for key, val in action.items() if key.endswith(".pos")}
 
+        if "shoulder_pan" in goal_pos:
+            # Convert so_101_leader naming to widowx_250s naming
+            goal_pos["waist"] = -goal_pos.pop("shoulder_pan")
+            goal_pos["shoulder"] = goal_pos.pop("shoulder_lift")
+            goal_pos["elbow"] = goal_pos.pop("elbow_flex")
+            goal_pos["wrist_rotate"] = -goal_pos.pop("wrist_roll")
+            goal_pos["wrist_angle"] = goal_pos.pop("wrist_flex")
+            goal_pos["forearm_roll"] = 0
+
         # Clip goals if too far from present positions (smoother teleop/BC playback) except for gripper
         if self.config.max_relative_target is not None:
             present_pos = self.bus.sync_read("Present_Position")

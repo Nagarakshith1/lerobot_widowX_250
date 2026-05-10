@@ -67,7 +67,7 @@ class SO101Leader(Teleoperator):
     def is_connected(self) -> bool:
         return self.bus.is_connected
 
-    def connect(self, calibrate: bool = True) -> None:
+    def connect(self, calibrate: bool = False) -> None:
         if self.is_connected:
             raise DeviceAlreadyConnectedError(f"{self} already connected")
 
