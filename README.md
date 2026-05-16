@@ -14,7 +14,7 @@ This fork extends [LeRobot](https://github.com/huggingface/lerobot) to support t
 
 ### Pick and place the block into the cup using Action Chunking Transformer
 
-### 🔵 Attempt 1: Single-Camera Setup
+#### 🟩 Attempt 1: Single-Camera Setup
 <img src="media/widowx_250s/pick_and_place/teleop_single_camera.png" height="250" alt="teleop_single_camera">
 
 Trained the [ACT](https://arxiv.org/abs/2304.13705) policy to perform a pick-and-place task — moving a block into a cup — using a **single front-mounted camera**.  
@@ -23,7 +23,7 @@ A total of **50 demonstration episodes** were collected using the **SpaceMouse t
 You can explore the dataset on Hugging Face: [widowx_250_pick_and_place_block](https://huggingface.co/datasets/msnaga/widowx_250_pick_and_place_block).  
 ##### 🎥 Episode Demo
 
-<img src="media/widowx_250s/pick_and_place/teleop.gif" height="250" alt="teleop">
+<img src="media/widowx_250s/pick_and_place/teleop.webp" height="250" alt="teleop">
 
 The model was trained for **60,000 steps** using the default ACT hyperparameters.  
 The corresponding trained checkpoint is available here: [widowx_250_pick_and_place_block_policy](https://huggingface.co/msnaga/widowx_250_pick_and_place_block_policy).
@@ -37,12 +37,12 @@ The corresponding trained checkpoint is available here: [widowx_250_pick_and_pla
 
 ##### ▶️ Policy Evaluation
 
-<img src="media/widowx_250s/pick_and_place/single_camera_eval_1.gif" height="250" alt="single_camera_eval_1">
+<img src="media/widowx_250s/pick_and_place/single_camera_eval_1.webp" height="250" alt="single_camera_eval_1">
 
 
-#### Attempt 2: Two-Camera Setup
+#### 🟩 Attempt 2: Two-Cameras Setup
 ##### 🎥 Teleoperation using the SO 101 Leader Arm
-<img src="media/widowx_250s/pick_and_place/so_101_teleop.gif" height="250" alt="teleop">
+<img src="media/widowx_250s/pick_and_place/so_101_teleop.webp" height="250" alt="teleop">
 
 For this attempt, the data collection process was streamlined by upgrading both the teleoperation hardware and the visual inputs:
 
