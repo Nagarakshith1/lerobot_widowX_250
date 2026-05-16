@@ -14,7 +14,7 @@ This fork extends [LeRobot](https://github.com/huggingface/lerobot) to support t
 
 ### Pick and place the block into the cup using Action Chunking Transformer
 
-#### Attempt 1: Single-Camera Setup
+### 🔵 Attempt 1: Single-Camera Setup
 <img src="media/widowx_250s/pick_and_place/teleop_single_camera.png" height="250" alt="teleop_single_camera">
 
 Trained the [ACT](https://arxiv.org/abs/2304.13705) policy to perform a pick-and-place task — moving a block into a cup — using a **single front-mounted camera**.  
@@ -28,22 +28,38 @@ You can explore the dataset on Hugging Face: [widowx_250_pick_and_place_block](h
 The model was trained for **60,000 steps** using the default ACT hyperparameters.  
 The corresponding trained checkpoint is available here: [widowx_250_pick_and_place_block_policy](https://huggingface.co/msnaga/widowx_250_pick_and_place_block_policy).
 
-##### Observations
+##### 📊 Observations
 1. The model successfully learned the overall task but struggled with **precise positioning** of the gripper when reaching for the block or cup.  
 2. The **single-camera setup** likely limited performance due to the **lack of depth information**.  
 3. When the gripper approached the block from behind, it often **collided with the table**, as the 2D camera perspective made the alignment appear correct. Similarly, approaching from the front caused the gripper to **close too high** above the block.  
 4. If the block was moved after the gripper had already reached it, the arm failed to adapt — this represents **out-of-distribution data** for the trained model.  
 5. With some assistance (e.g., positioning the block more visibly in front), the arm was able to **grip and place** the block into the cup successfully.
 
-##### ▶️ Policy Evaluation Sample
+##### ▶️ Policy Evaluation
 
 <img src="media/widowx_250s/pick_and_place/single_camera_eval_1.gif" height="250" alt="single_camera_eval_1">
+
+
+#### Attempt 2: Two-Camera Setup
+##### 🎥 Teleoperation using the SO 101 Leader Arm
+<img src="media/widowx_250s/pick_and_place/so_101_teleop.gif" height="250" alt="teleop">
+
+For this attempt, the data collection process was streamlined by upgrading both the teleoperation hardware and the visual inputs:
+
+* **Improved Teleoperation:** The **SO-101 leader arm** replaced the SpaceMouse for teleoperation. Controlling the system with a physical leader arm proved to be significantly easier and faster for collecting fluid demonstration data.
+* **Kinematic Alignment:** The WidowX 250S features an additional forearm roll motor that is not present on the SO-101 leader arm. To resolve this hardware discrepancy during data collection, the WidowX's forearm roll motor was locked to its home position and excluded from active control. 
+* **Dual-Camera Configuration:** To overcome the depth perception limitations observed in the single-camera setup, this configuration utilizes **two cameras** (one mounted overhead and one in the front). This provides the model with multiple perspectives to better estimate depth and spatial relationships in the workspace.
+
+##### ▶️ Policy Evaluations
+
+<img src="media/widowx_250s/pick_and_place/two_views_episode_0.webp" height="250" alt="single_camera_eval_1">
 
 ---
 
 ## Teleoperation System
 
-You can teleoperate the WidowX 250S robotic arm using:  
+You can teleoperate the WidowX 250S robotic arm using:
+- **SO101 Leader Arm**
 - **Keyboard controls**,
 - **[3Dconnexion SpaceMouse](https://3dconnexion.com/dk/product/spacemouse-compact/)**  
 
